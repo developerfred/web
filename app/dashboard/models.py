@@ -256,12 +256,23 @@ class Bounty(SuperModel):
         ('submitted', 'submitted'),
         ('unknown', 'unknown'),
     )
+
+    BOUNTY_STATES = (
+        ('open', 'Open Bounty'),
+        ('work_started', 'Work Started'),
+        ('work_submitted', 'Work Submitted'),
+        ('done', 'Done'),
+        ('cancelled', 'Cancelled'),
+        ('expired', 'Expired'),
+    )
+
     FUNDED_STATUSES = ['reserved', 'open', 'started', 'submitted', 'done']
     OPEN_STATUSES = ['reserved', 'open', 'started', 'submitted']
     CLOSED_STATUSES = ['expired', 'unknown', 'cancelled', 'done']
     WORK_IN_PROGRESS_STATUSES = ['reserved', 'open', 'started', 'submitted']
     TERMINAL_STATUSES = ['done', 'expired', 'cancelled']
 
+    bounty_state = models.CharField(max_length=50, choices=BOUNTY_STATES, db_index=True)
     web3_type = models.CharField(max_length=50, default='bounties_network')
     title = models.CharField(max_length=1000)
     web3_created = models.DateTimeField(db_index=True)
@@ -381,6 +392,10 @@ class Bounty(SuperModel):
         if self.github_url:
             self.github_url = clean_bounty_url(self.github_url)
         super().save(*args, **kwargs)
+
+    def handle_event(self, event):
+        """Handle a new BountyEvent, and potentially change state"""
+        pass
 
     @property
     def latest_activity(self):
@@ -1225,6 +1240,29 @@ class Bounty(SuperModel):
         else:
             return ''
 
+
+class BountyEvent(SuperModel):
+    """An Event taken by a user, which may change the state of a Bounty"""
+
+    EVENT_TYPES = (
+        ('accept_worker', 'Accept Worker'),
+        ('cancel_bounty', 'Cancel Bounty'),
+        ('submit_work', 'Submit Work'),
+        ('stop_work', 'Stop Work'),
+        ('express_interest', 'Express Interest'),
+        ('payout_bounty', 'Payout Bounty'),
+        ('expire_bounty', 'Expire Bounty'),
+        ('extend_expiration', 'Extend Expiration'),
+        ('close_bounty', 'Close Bounty'),
+        ('increase_bounty', 'Increase Bounty'),
+        ('sync_issue', 'Sync Issue'),
+    )
+
+    bounty = models.ForeignKey('dashboard.Bounty', on_delete=models.CASCADE,
+        related_name='events')
+    created_by = models.ForeignKey('dashboard.Profile',
+        on_delete=models.SET_NULL, related_name='events')
+    event_type = models.CharField(max_length=50, choices=EVENT_TYPES)
 
 class BountyFulfillmentQuerySet(models.QuerySet):
     """Handle the manager queryset for BountyFulfillments."""
