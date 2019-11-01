@@ -396,7 +396,7 @@ class Bounty(SuperModel):
     EVENT_HANDLERS = {
         'traditional': {
             'open_bounty': {
-                'express_interest': None
+                'express_interest': None,
                 'accept_worker': 'work_started'
             }
         }
@@ -1276,7 +1276,7 @@ class BountyEvent(SuperModel):
     created_by = models.ForeignKey('dashboard.Profile',
         on_delete=models.SET_NULL, related_name='events', blank=True, null=True)
     event_type = models.CharField(max_length=50, choices=EVENT_TYPES)
-    metadata = models.JSONField(default=dict, blank=True)
+    metadata = JSONField(default=dict, blank=True)
 
 
 class BountyFulfillmentQuerySet(models.QuerySet):
