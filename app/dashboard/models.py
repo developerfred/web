@@ -393,9 +393,22 @@ class Bounty(SuperModel):
             self.github_url = clean_bounty_url(self.github_url)
         super().save(*args, **kwargs)
 
+    EVENT_HANDLERS = {
+        'traditional': {
+            'open_bounty': {
+                'express_interest': None
+                'accept_worker': 'work_started'
+            }
+        }
+    }
+
+
     def handle_event(self, event):
         """Handle a new BountyEvent, and potentially change state"""
-        pass
+        next_state = EVENT_HANDLERS[self.project_type][self.bounty_state][event.event_type]
+        if next_state:
+            self.bounty_state = next_state
+            self.save()
 
     @property
     def latest_activity(self):
@@ -1261,8 +1274,10 @@ class BountyEvent(SuperModel):
     bounty = models.ForeignKey('dashboard.Bounty', on_delete=models.CASCADE,
         related_name='events')
     created_by = models.ForeignKey('dashboard.Profile',
-        on_delete=models.SET_NULL, related_name='events')
+        on_delete=models.SET_NULL, related_name='events', blank=True, null=True)
     event_type = models.CharField(max_length=50, choices=EVENT_TYPES)
+    metadata = models.JSONField(default=dict, blank=True)
+
 
 class BountyFulfillmentQuerySet(models.QuerySet):
     """Handle the manager queryset for BountyFulfillments."""
