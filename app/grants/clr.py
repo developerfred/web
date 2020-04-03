@@ -26,6 +26,7 @@ import re
 import requests
 import numpy
 import pandas as pd
+from dashboard.utils import get_web3
 
 from itertools import combinations
 
@@ -42,9 +43,6 @@ from decimal import Decimal
 from hexbytes import HexBytes
 from time import sleep
 from web3.auto.infura import w3
-from web3.exceptions import (
-    TransactionNotFound,
-)
 
 # ERC20 / ERC721 tokens
 # Transfer(address,address,uint256)
@@ -688,6 +686,7 @@ def grants_transaction_validator(list_contributions):
             print(
                 f"{bcolors.OKGREEN} {index_element} txid: {txid[:10]} amount: {human_readable_value} {contract_symbol}   -> status: 1{bcolors.ENDC}")
 
+<<<<<<< HEAD
     for index_transaction, index_valid in enumerate(df):
         for index_element, check_value in enumerate(df[index_valid]):
             if check_value is not None and not isinstance(check_value, float) and len(check_value) == 66:
@@ -709,17 +708,29 @@ def grants_transaction_validator(list_contributions):
                         print ("\t↳", end='')
                         transaction_status(transaction, rtx)
 
+    w3 = get_web3('mainnet')
+    for check_value in list_contributions:
+        if check_value is not None and not isinstance(check_value, float) and len(check_value):
+            transaction_tax = check_value[0]
+            try:
+                transaction = check_transaction(transaction_tax)
+                token_address = check_token(transaction.to)
+                if (token_address):
+                    transaction_status(transaction, transaction_tax)
+                else:
+                    print (f"{bcolors.FAIL}{bcolors.UNDERLINE} {index_element} txid: {transaction_tax[:10]} -> status: 0 - tx failed {bcolors.ENDC}")
 
-                except:
-                        transaction_receipt = w3.eth.getTransactionReceipt(transaction_tax)
-                        if (transaction_receipt != None and transaction_receipt.cumulativeGasUsed >= 2100):
-                            transaction_hash = transaction_receipt.transactionHash.hex()
-                            transaction = check_transaction(transaction_hash)
-                            if transaction.value > 0.001:
-                                amount = w3.fromWei(transaction.value, 'ether')
-                                print (f"{bcolors.OKGREEN} {index_element} txid: {transaction_tax[:10]} {amount} ETH -> status: 1 {bcolors.ENDC}")
-                            else:
-                                print (f"{bcolors.FAIL}{bcolors.UNDERLINE} {index_element} txid: {transaction_tax[:10]} -> status: 0 - amount was off by 0.001 {bcolors.ENDC}")
+            except Exception as e:
+                print(e)
+                transaction_receipt = w3.eth.getTransactionReceipt(transaction_tax)
+                if (transaction_receipt != None and transaction_receipt.cumulativeGasUsed >= 2100):
+                    transaction_hash = transaction_receipt.transactionHash.hex()
+                    transaction = check_transaction(transaction_hash)
+                    if transaction.value > 0.001:
+                        amount = w3.fromWei(transaction.value, 'ether')
+                        print (f"{bcolors.OKGREEN} {index_element} txid: {transaction_tax[:10]} {amount} ETH -> status: 1 {bcolors.ENDC}")
+                    else:
+                        print (f"{bcolors.FAIL}{bcolors.UNDERLINE} {index_element} txid: {transaction_tax[:10]} -> status: 0 - amount was off by 0.001 {bcolors.ENDC}")
 
 
 
