@@ -161,11 +161,18 @@
                       <i class="fas fa-share-alt font-caption mr-2"></i>
                       <span>Share</span>
                     </a>
+
                   </div>
                 </div>
             </div>
             <div class="col-12 mt-2">
               <h5 class="bounty-heading mt-0 pt-4" id="description">{% trans "Description" %}</h5>
+              {% if attached_job_description|length %}
+                <a href="${result['attached_job_description']}" class="dropdown-item p-2" target="_blank">
+                  <i class="fas fa-file mr-2"></i>
+                  View Job Description
+                </a>`
+              {% endif %}
               <div class="bounty-text text-body issue_description" id="issue_description"></div>
             </div>
             <div class="col-12">
