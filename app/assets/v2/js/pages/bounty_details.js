@@ -206,11 +206,11 @@ var callbacks = {
 
     const categories = [];
     const categoryObj = {
-      frontend: '<span class="badge badge-secondary mr-1"><i class="fas fa-laptop-code"></i> Front End</span>',
-      backend: '<span class="badge badge-secondary mr-1"><i class="fas fa-code"></i> Back End</span>',
-      design: '<span class="badge badge-secondary mr-1"><i class="fas fa-pencil-ruler"></i> Design</span>',
-      documentation: '<span class="badge badge-secondary mr-1"><i class="fas fa-file-alt"></i> Documentation</span>',
-      other: '<span class="badge badge-secondary mr-1"><i class="fas fa-briefcase"></i> Other</span>'
+      frontend: '<span class="badge badge-secondary skill mr-1"><i class="fas fa-laptop-code"></i> Front End</span>',
+      backend: '<span class="badge badge-secondary skill mr-1"><i class="fas fa-code"></i> Back End</span>',
+      design: '<span class="badge badge-secondary skill mr-1"><i class="fas fa-pencil-ruler"></i> Design</span>',
+      documentation: '<span class="badge badge-secondary skill mr-1"><i class="fas fa-file-alt"></i> Documentation</span>',
+      other: '<span class="badge badge-secondary skill mr-1"><i class="fas fa-briefcase"></i> Other</span>'
     };
 
     result.bounty_categories.forEach(function(category) {

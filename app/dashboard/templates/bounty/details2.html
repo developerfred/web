@@ -74,12 +74,16 @@
                   </div>
                   <div class="d-inline-block font-subheader ml-3" id="bounty_categories">
                     <template v-for="category in bounty.bounty_categories">
-                      <span class="badge badge-secondary mr-1" v-if="category === 'frontend'"><i class="fas fa-laptop-code"></i> Front End</span>
+                      <span class="badge badge-secondary mr-1" v-if="category === 'frontend'" ><i class="fas fa-laptop-code"></i> Front
+                        End</span>
                       <span class="badge badge-secondary mr-1" v-else-if="category === 'backend'"><i class="fas fa-code"></i> Back End</span>
                       <span class="badge badge-secondary mr-1" v-else-if="category === 'design'"><i class="fas fa-pencil-ruler"></i> Design</span>
                       <span class="badge badge-secondary mr-1" v-else-if="category === 'documentation'"><i class="fas fa-file-alt"></i> Documentation</span>
                       <span class="badge badge-secondary mr-1" v-else="category === 'other'"><i class="fas fa-briefcase"></i> Other</span>
                     </template>
+                  </div>
+                  <div class="d-inline-block font-subheader ml-3" id="open_positions">
+                    <span class="mr-1" v-if="show_job_description !== ''">|<i class="fas fa-briefcase"></i> View Job Description</span>
                   </div>
                 </div>
               </div>

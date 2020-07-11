@@ -240,6 +240,11 @@ body {
   display: inline-block;
 }
 
+#bounty_categories .skill {
+  padding: 0.39rem;
+  border-radius: 2px;
+}
+
 .issue-url > a {
   color: #ffffff;
 }
